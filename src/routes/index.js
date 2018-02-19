@@ -7,7 +7,7 @@ import Register from './Register';
 export default () => (
   <BrowserRouter>
     <Switch>
-      <Route path="/" exact component={Home} />
+      <Route path="/home" exact component={Home} />
       <Route path="/register" exact component={Register} />
     </Switch>
   </BrowserRouter>
