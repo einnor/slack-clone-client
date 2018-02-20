@@ -230,13 +230,19 @@ apollo-client@^2.2.5:
   optionalDependencies:
     "@types/async" "2.0.47"
 
+apollo-link-context@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/apollo-link-context/-/apollo-link-context-1.0.5.tgz#45241b508629d685b614dfc9c344932695e41e07"
+  dependencies:
+    apollo-link "^1.1.0"
+
 apollo-link-dedup@^1.0.0:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/apollo-link-dedup/-/apollo-link-dedup-1.0.6.tgz#566ab421a5f6ef41995e2e386f575600d51b1408"
   dependencies:
     apollo-link "^1.1.0"
 
-apollo-link-error@^1.0.3:
+apollo-link-error@^1.0.3, apollo-link-error@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/apollo-link-error/-/apollo-link-error-1.0.5.tgz#e169705956522dccab1a876a54374855937cb083"
   dependencies:

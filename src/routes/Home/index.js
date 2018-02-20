@@ -16,7 +16,8 @@ const Home = ({ data: { loading, getAllUsers } }) => {
 };
 
 Home.propTypes = {
-  data: PropTypes.node.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  data: PropTypes.object.isRequired,
 };
 
 // Create our enhancer function.
