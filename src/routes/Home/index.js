@@ -1,6 +1,7 @@
 import React from 'react';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
+import PropTypes from 'prop-types';
 
 const Home = ({ data: { loading, getAllUsers } }) => {
   if (loading) return null;
@@ -12,6 +13,10 @@ const Home = ({ data: { loading, getAllUsers } }) => {
       ))}
     </ul>
   );
+};
+
+Home.propTypes = {
+  data: PropTypes.node.isRequired,
 };
 
 // Create our enhancer function.

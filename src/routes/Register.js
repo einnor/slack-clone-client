@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Container, Header, Input, Button, Message } from 'semantic-ui-react';
+import { Form, Container, Header, Input, Button, Message } from 'semantic-ui-react';
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
+import PropTypes from 'prop-types';
 
 class Register extends Component {
-
   state = {
     username: '',
     usernameError: '',
@@ -35,7 +35,7 @@ class Register extends Component {
     const { ok, errors } = response.data.register;
 
     if (ok) {
-      this.props.history.push('/home');
+      this.props.history.push('/');
     } else {
       const err = {};
       errors.forEach(({ path, message }) => {
@@ -46,7 +46,14 @@ class Register extends Component {
   };
 
   render() {
-    const { username, email, password, usernameError, emailError, passwordError } = this.state;
+    const {
+      username,
+      email,
+      password,
+      usernameError,
+      emailError,
+      passwordError,
+    } = this.state;
 
     const errorList = [];
 
@@ -56,47 +63,51 @@ class Register extends Component {
 
     return (
       <Container text>
-        <Header as='h2'>Register</Header>
-        <Input
-          fluid
-          error={!!usernameError}
-          onChange={this.onChange}
-          value={username}
-          name='username'
-          placeholder='username...'
-        />
-        <Input
-          fluid
-          error={!!emailError}
-          onChange={this.onChange}
-          value={email}
-          name='email'
-          placeholder='email...'
-        />
-        <Input
-          fluid
-          error={!!passwordError}
-          onChange={this.onChange}
-          value={password}
-          name='password'
-          placeholder='password...'
-          type='password'
-        />
-        <Button onClick={this.onSubmit}>Submit</Button>
-
+        <Header as="h2">Register</Header>
+        <Form>
+          <Form.Field error={!!usernameError}>
+            <Input
+              fluid
+              onChange={this.onChange}
+              value={username}
+              name="username"
+              placeholder="username..."
+            />
+          </Form.Field>
+          <Form.Field error={!!emailError}>
+            <Input
+              fluid
+              onChange={this.onChange}
+              value={email}
+              name="email"
+              placeholder="email..."
+            />
+          </Form.Field>
+          <Form.Field error={!!passwordError}>
+            <Input
+              fluid
+              onChange={this.onChange}
+              value={password}
+              name="password"
+              placeholder="password..."
+              type="password"
+            />
+          </Form.Field>
+          <Button onClick={this.onSubmit}>Submit</Button>
+        </Form>
         {
-          usernameError || emailError || passwordError ?
+          errorList.length ?
             (
               <Message
                 error
-                header='There was some errors with your submission'
+                header="There was some errors with your submission"
                 list={errorList}
               />
             ) : null
         }
       </Container>
     );
-  };
+  }
 }
 
 const registerMutation = gql`
@@ -110,5 +121,10 @@ const registerMutation = gql`
     }
   }
 `;
+
+Register.propTypes = {
+  mutate: PropTypes.func.isRequired,
+  history: PropTypes.node.isRequired,
+};
 
 export default graphql(registerMutation)(Register);
