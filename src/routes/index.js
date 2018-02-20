@@ -7,6 +7,7 @@ import Home from './Home';
 import Register from './Register';
 import Login from './Login';
 import CreateTeam from './CreateTeam';
+import ViewTeam from './ViewTeam';
 
 const isAuthenticated = () => {
   const token = localStorage.getItem('token');
@@ -39,7 +40,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 );
 
 PrivateRoute.propTypes = {
-  component: PropTypes.node.isRequired,
+  component: PropTypes.func.isRequired,
 };
 
 export default () => (
@@ -49,6 +50,7 @@ export default () => (
       <Route path="/register" exact component={Register} />
       <Route path="/login" exact component={Login} />
       <PrivateRoute path="/create-team" exact component={CreateTeam} />
+      <Route path="/view-teams" exact component={ViewTeam} />
     </Switch>
   </BrowserRouter>
 );
