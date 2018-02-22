@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
-import { graphql } from 'react-apollo';
 import PropTypes from 'prop-types';
-import findIndex from 'lodash/findIndex';
 import decode from 'jwt-decode';
 
 import Teams from '../components/Teams';
 import Channels from '../components/Channels';
 import AddChannelModal from '../components/AddChannelModal';
-import { allTeamsQuery } from '../graphql/team';
 
-class Sidebar extends Component {
+export default class Sidebar extends Component {
   state = {
     openAddChannelModal: false,
   };
@@ -23,12 +20,8 @@ class Sidebar extends Component {
   };
 
   render() {
-    const { data: { loading, allTeams }, currentTeamId } = this.props;
+    const { teams, currentTeam } = this.props;
 
-    if (loading) return null;
-
-    const currentTeamIdx = currentTeamId ? findIndex(allTeams, ['id', parseInt(currentTeamId, 10)]) : 0;
-    const currentTeam = allTeams[currentTeamIdx];
     let username = '';
     try {
       const token = localStorage.getItem('token');
@@ -42,10 +35,7 @@ class Sidebar extends Component {
     return [
       <Teams
         key="team-sidebar"
-        teams={allTeams.map(team => ({
-          id: team.id,
-          letter: team.name.charAt(0).toUpperCase(),
-        }))}
+        teams={teams}
       />,
       <Channels
         key="channels-sidebar"
@@ -71,8 +61,7 @@ class Sidebar extends Component {
 
 Sidebar.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
-  data: PropTypes.object.isRequired,
+  teams: PropTypes.array.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  currentTeam: PropTypes.object.isRequired,
 };
-
-// Export the enhanced component.
-export default graphql(allTeamsQuery)(Sidebar);
