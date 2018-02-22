@@ -28,13 +28,16 @@ export default class Sidebar extends Component {
     const { openInvitePeopleModal, openAddChannelModal } = this.state;
 
     let username = '';
+    let isOwner = false;
     try {
       const token = localStorage.getItem('token');
       const { user } = decode(token);
       // eslint-disable-next-line prefer-destructuring
       username = user.username;
+      isOwner = user.id === currentTeam.owner;
     } catch (err) {
       username = '';
+      isOwner = false;
     }
 
     return [
@@ -46,6 +49,7 @@ export default class Sidebar extends Component {
         key="channels-sidebar"
         teamId={currentTeam.id}
         teamName={currentTeam.name}
+        isOwner={isOwner}
         username={username}
         channels={currentTeam.channels}
         users={[
