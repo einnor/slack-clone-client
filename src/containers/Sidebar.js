@@ -49,6 +49,7 @@ class Sidebar extends Component {
       />,
       <Channels
         key="channels-sidebar"
+        teamId={currentTeam.id}
         teamName={currentTeam.name}
         username={username}
         channels={currentTeam.channels}
