@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import PropTypes from 'prop-types';
 import findIndex from 'lodash/findIndex';
@@ -8,6 +7,7 @@ import decode from 'jwt-decode';
 import Teams from '../components/Teams';
 import Channels from '../components/Channels';
 import AddChannelModal from '../components/AddChannelModal';
+import { allTeamsQuery } from '../graphql/team';
 
 class Sidebar extends Component {
   state = {
@@ -59,7 +59,7 @@ class Sidebar extends Component {
         onAddChannelClick={this.handleAddChannelClick}
       />,
       <AddChannelModal
-        teamId={currentTeamId}
+        teamId={currentTeam.id}
         onClose={this.handleCloseAddChannelModal}
         open={this.state.openAddChannelModal}
         key="sidebar-add-channel-modal"
@@ -73,20 +73,5 @@ Sidebar.propTypes = {
   data: PropTypes.object.isRequired,
 };
 
-const allTeamsQuery = graphql(gql`
-  query {
-    allTeams {
-      id
-      name
-      channels {
-        id
-        name
-      }
-    }
-  }`);
-
-// Enhance our component.
-const SidebarWithData = allTeamsQuery(Sidebar);
-
 // Export the enhanced component.
-export default SidebarWithData;
+export default graphql(allTeamsQuery)(Sidebar);
