@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
 import findIndex from 'lodash/findIndex';
+import { Redirect } from 'react-router-dom';
 
 import { allTeamsQuery } from '../graphql/team';
 import AppLayout from '../components/AppLayout';
@@ -10,19 +11,28 @@ import SendMessage from '../components/SendMessage';
 import Messages from '../components/Messages';
 import Sidebar from '../containers/Sidebar';
 
-const ViewTeam = ({ data: { loading, allTeams }, match: { params: { teamId, channelId } } }) => {
+const ViewTeam = ({
+  data: { loading, allTeams, inviteTeams }, match: { params: { teamId, channelId } },
+}) => {
   if (loading) return null;
 
-  const currentTeamIdx = teamId ? findIndex(allTeams, ['id', parseInt(teamId, 10)]) : 0;
-  const currentTeam = allTeams[currentTeamIdx];
+  const teams = inviteTeams ? [...allTeams, ...inviteTeams] : allTeams;
+
+  if (!teams.length) return (<Redirect to="/create-team" />);
+
+  const teamIdInteger = parseInt(teamId, 10);
+
+  const currentTeamIdx = teamIdInteger ? findIndex(teams, ['id', parseInt(teamId, 10)]) : 0;
+  const currentTeam = currentTeamIdx === -1 ? allTeams[0] : teams[currentTeamIdx];
 
   const currentChannelIdx = channelId ? findIndex(currentTeam.channels, ['id', parseInt(channelId, 10)]) : 0;
-  const currentChannel = currentTeam.channels[currentChannelIdx];
+  const currentChannel = currentChannelIdx === -1 ?
+    currentTeam.channels[0] : currentTeam.channels[currentChannelIdx];
 
   return (
     <AppLayout>
       <Sidebar
-        teams={allTeams.map(team => ({
+        teams={teams.map(team => ({
           id: team.id,
           letter: team.name.charAt(0).toUpperCase(),
         }))}
