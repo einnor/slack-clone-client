@@ -5,10 +5,12 @@ import decode from 'jwt-decode';
 import Teams from '../components/Teams';
 import Channels from '../components/Channels';
 import AddChannelModal from '../components/AddChannelModal';
+import InvitePeopleModal from '../components/InvitePeopleModal';
 
 export default class Sidebar extends Component {
   state = {
     openAddChannelModal: false,
+    openInvitePeopleModal: false,
   };
 
   handleAddChannelClick = () => {
@@ -19,8 +21,17 @@ export default class Sidebar extends Component {
     this.setState({ openAddChannelModal: false });
   };
 
+  handleInvitePeopleClick = () => {
+    this.setState({ openInvitePeopleModal: true });
+  };
+
+  handleCloseInvitePeopleModal = () => {
+    this.setState({ openInvitePeopleModal: false });
+  };
+
   render() {
     const { teams, currentTeam } = this.props;
+    const { openInvitePeopleModal, openAddChannelModal } = this.state;
 
     let username = '';
     try {
@@ -48,12 +59,19 @@ export default class Sidebar extends Component {
           { id: 2, name: 'user1' },
         ]}
         onAddChannelClick={this.handleAddChannelClick}
+        onInvitePeopleClick={this.handleInvitePeopleClick}
       />,
       <AddChannelModal
         teamId={currentTeam.id}
         onClose={this.handleCloseAddChannelModal}
-        open={this.state.openAddChannelModal}
+        open={openAddChannelModal}
         key="sidebar-add-channel-modal"
+      />,
+      <InvitePeopleModal
+        teamId={currentTeam.id}
+        onClose={this.handleCloseInvitePeopleModal}
+        open={openInvitePeopleModal}
+        key="invite-people-modal"
       />,
     ];
   }
