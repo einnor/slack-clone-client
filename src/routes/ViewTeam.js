@@ -8,8 +8,8 @@ import { allTeamsQuery } from '../graphql/team';
 import AppLayout from '../components/AppLayout';
 import Header from '../components/Header';
 import SendMessage from '../components/SendMessage';
-import Messages from '../components/Messages';
 import Sidebar from '../containers/Sidebar';
+import MessageContainer from '../containers/MessageContainer';
 
 const ViewTeam = ({
   data: { loading, allTeams, inviteTeams }, match: { params: { teamId, channelId } },
@@ -38,13 +38,14 @@ const ViewTeam = ({
         }))}
         currentTeam={currentTeam}
       />
-      <Header channelName={currentChannel.name} />
-      <Messages channelId={currentChannel.id}>
-        <ul className="message-list">
-          <li>Item</li>
-        </ul>
-      </Messages>
-      <SendMessage channelName={currentChannel.name} />
+      {currentChannel && <Header channelName={currentChannel.name} />}
+      {currentChannel && (
+        <MessageContainer channelId={currentChannel.id} />
+      )}
+      {currentChannel && <SendMessage
+        channelName={currentChannel.name}
+        channelId={currentChannel.id}
+      />}
     </AppLayout>
   );
 };
