@@ -31,7 +31,7 @@ const SendMessage = ({
       onChange={handleChange}
       onKeyDown={(e) => {
         if (e.keyCode === ENTER_KEY && !isSubmitting) {
-          handleSubmit();
+          handleSubmit(e);
         }
       }}
       placeholder={`Message #${channelName}`}
@@ -51,7 +51,7 @@ SendMessage.propTypes = {
 
 const createMessageMutation = gql`
   mutation($channelId: Int!, $text: String!) {
-    createMessage(chanelId: $channelId, text: $text)
+    createMessage(channelId: $channelId, text: $text)
   }
 `;
 
