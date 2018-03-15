@@ -8,6 +8,7 @@ import Register from './Register';
 import Login from './Login';
 import CreateTeam from './CreateTeam';
 import ViewTeam from './ViewTeam';
+import DirectMessage from './DirectMessage';
 
 const isAuthenticated = () => {
   const token = localStorage.getItem('token');
@@ -51,6 +52,7 @@ export default () => (
       <Route path="/login" exact component={Login} />
       <PrivateRoute path="/create-team" exact component={CreateTeam} />
       <PrivateRoute path="/view-teams/:teamId?/:channelId?" exact component={ViewTeam} />
+      <PrivateRoute path="/view-teams/users/:teamId/:userId" exact component={DirectMessage} />
     </Switch>
   </BrowserRouter>
 );
