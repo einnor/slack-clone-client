@@ -7,10 +7,10 @@ import gql from 'graphql-tag';
 
 import { meQuery } from '../graphql/team';
 import AppLayout from '../components/AppLayout';
-// import Header from '../components/Header';
+import Header from '../components/Header';
 import SendMessage from '../components/SendMessage';
 import Sidebar from '../containers/Sidebar';
-// import MessageContainer from '../containers/MessageContainer';
+import DirectMessageContainer from '../containers/DirectMessageContainer';
 
 const DirectMessage = ({
   mutate, data: { loading, me }, match: { params: { teamId, userId } },
@@ -22,7 +22,6 @@ const DirectMessage = ({
   if (!teams.length) return (<Redirect to="/create-team" />);
 
   const teamIdInteger = parseInt(teamId, 10);
-
   const currentTeamIdx = teamIdInteger ? findIndex(teams, ['id', parseInt(teamId, 10)]) : 0;
   const currentTeam = currentTeamIdx === -1 ? teams[0] : teams[currentTeamIdx];
 
@@ -36,9 +35,18 @@ const DirectMessage = ({
         currentTeam={currentTeam}
         username={username}
       />
-
+      <Header channelName={userId} />
+      <DirectMessageContainer teamId={teamId} userId={userId} />
       <SendMessage
-        onSubmit={() => {}}
+        onSubmit={async (text) => {
+          await mutate({
+            variables: {
+              text,
+              receiverId: userId,
+              teamId,
+            },
+          });
+        }}
         placeholder={userId}
       />
     </AppLayout>
@@ -53,13 +61,13 @@ DirectMessage.propTypes = {
   mutate: PropTypes.func.isRequired,
 };
 
-const createMessageMutation = gql`
-  mutation($channelId: Int!, $text: String!) {
-    createMessage(channelId: $channelId, text: $text)
+const createDirectMessageMutation = gql`
+  mutation($receiverId: Int!, $text: String!, $teamId: Int!) {
+    createDirectMessage(receiverId: $receiverId, text: $text, teamId: $teamId)
   }
 `;
 
 export default compose(
   graphql(meQuery, { options: { fetchPolicy: 'network-only' } }),
-  graphql(createMessageMutation),
+  graphql(createDirectMessageMutation),
 )(DirectMessage);
