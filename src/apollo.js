@@ -36,13 +36,17 @@ const afterwareLink = new ApolloLink((operation, forward) => (
   })
 ));
 
-const httpLinkWithMiddleware = middlewareLink.concat(httpLink, afterwareLink);
+const httpLinkWithMiddleware = afterwareLink.concat(middlewareLink.concat(httpLink));
 
 // Create a WebSocket link:
 const wsLink = new WebSocketLink({
   uri: 'ws://localhost:8080/subscriptions',
   options: {
     reconnect: true,
+    connectionParams: {
+      token: localStorage.getItem('token'),
+      refreshToken: localStorage.getItem('refreshToken'),
+    },
   },
 });
 
