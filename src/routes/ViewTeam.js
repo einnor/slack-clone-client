@@ -16,7 +16,7 @@ const ViewTeam = ({
 }) => {
   if (loading) return null;
 
-  const { teams } = me;
+  const { teams, username } = me;
 
   if (!teams.length) return (<Redirect to="/create-team" />);
 
@@ -37,6 +37,7 @@ const ViewTeam = ({
           letter: team.name.charAt(0).toUpperCase(),
         }))}
         currentTeam={currentTeam}
+        username={username}
       />
       {currentChannel && <Header channelName={currentChannel.name} />}
       {currentChannel && (

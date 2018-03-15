@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import decode from 'jwt-decode';
 
 import Teams from '../components/Teams';
 import Channels from '../components/Channels';
@@ -24,21 +23,8 @@ export default class Sidebar extends Component {
   };
 
   render() {
-    const { teams, currentTeam } = this.props;
+    const { teams, currentTeam, username } = this.props;
     const { openInvitePeopleModal, openAddChannelModal } = this.state;
-
-    let username = '';
-    let isOwner = false;
-    try {
-      const token = localStorage.getItem('token');
-      const { user } = decode(token);
-      // eslint-disable-next-line prefer-destructuring
-      username = user.username;
-      isOwner = user.id === currentTeam.owner;
-    } catch (err) {
-      username = '';
-      isOwner = false;
-    }
 
     return [
       <Teams
@@ -49,7 +35,7 @@ export default class Sidebar extends Component {
         key="channels-sidebar"
         teamId={currentTeam.id}
         teamName={currentTeam.name}
-        isOwner={isOwner}
+        isOwner={currentTeam.admin}
         username={username}
         channels={currentTeam.channels}
         users={[
@@ -80,4 +66,5 @@ Sidebar.propTypes = {
   teams: PropTypes.array.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   currentTeam: PropTypes.object.isRequired,
+  username: PropTypes.string.isRequired,
 };
