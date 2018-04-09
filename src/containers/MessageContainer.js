@@ -46,12 +46,12 @@ class MessageContainer extends Component {
         channelId,
       },
       updateQuery: (prev, { subscriptionData }) => {
-        if (!subscriptionData.data) {
+        if (!subscriptionData) {
           return prev;
         }
         return {
           ...prev,
-          messages: [...prev.messages, subscriptionData.newChannelMessage],
+          messages: [...prev.messages, subscriptionData.data.newChannelMessage],
         };
       },
     });

@@ -53,6 +53,7 @@ export default ({
   channels,
   users,
   onAddChannelClick,
+  onDirectMessageClick,
   teamId,
   onInvitePeopleClick,
   isOwner,
@@ -70,7 +71,7 @@ export default ({
     </div>
     <div>
       <SideBarList>
-        <SideBarListHeader>Direct Messages</SideBarListHeader>
+        <SideBarListHeader>Direct Messages <Icon onClick={onDirectMessageClick} name="add circle" /></SideBarListHeader>
         {users.map(user)}
       </SideBarList>
     </div>

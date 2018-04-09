@@ -4,17 +4,24 @@ import PropTypes from 'prop-types';
 import Teams from '../components/Teams';
 import Channels from '../components/Channels';
 import AddChannelModal from '../components/AddChannelModal';
+import DirectMessageModal from '../components/DirectMessageModal';
 import InvitePeopleModal from '../components/InvitePeopleModal';
 
 export default class Sidebar extends Component {
   state = {
     openAddChannelModal: false,
     openInvitePeopleModal: false,
+    openDirectMessageModal: false,
   };
 
   toggleAddChannelModal = (e) => {
     if (e) e.preventDefault();
     this.setState(state => ({ openAddChannelModal: !state.openAddChannelModal }));
+  };
+
+  toggleDirectMessageModal = (e) => {
+    if (e) e.preventDefault();
+    this.setState(state => ({ openDirectMessageModal: !state.openDirectMessageModal }));
   };
 
   toggleeInvitePeopleModal = (e) => {
@@ -24,7 +31,7 @@ export default class Sidebar extends Component {
 
   render() {
     const { teams, currentTeam, username } = this.props;
-    const { openInvitePeopleModal, openAddChannelModal } = this.state;
+    const { openInvitePeopleModal, openAddChannelModal, openDirectMessageModal } = this.state;
 
     return [
       <Teams
@@ -43,6 +50,7 @@ export default class Sidebar extends Component {
           { id: 2, name: 'user1' },
         ]}
         onAddChannelClick={this.toggleAddChannelModal}
+        onDirectMessageClick={this.toggleDirectMessageModal}
         onInvitePeopleClick={this.toggleeInvitePeopleModal}
       />,
       <AddChannelModal
@@ -50,6 +58,12 @@ export default class Sidebar extends Component {
         onClose={this.toggleAddChannelModal}
         open={openAddChannelModal}
         key="sidebar-add-channel-modal"
+      />,
+      <DirectMessageModal
+        teamId={currentTeam.id}
+        onClose={this.toggleDirectMessageModal}
+        open={openDirectMessageModal}
+        key="direct-message-modal"
       />,
       <InvitePeopleModal
         teamId={currentTeam.id}
