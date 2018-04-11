@@ -41,9 +41,9 @@ const Bubble = ({ on = true }) => (on ? <Green>●</Green> : '○');
 
 const channel = ({ id, name }, teamId) => <Link to={`/view-teams/${teamId}/${id}`} key={`channel-${id}`}><SideBarListItem># {name}</SideBarListItem></Link>;
 
-const user = ({ id, name }) => (
+const user = ({ id, username }) => (
   <SideBarListItem key={`user-${id}`}>
-    <Bubble /> {name}
+    <Bubble /> {username}
   </SideBarListItem>
 );
 
