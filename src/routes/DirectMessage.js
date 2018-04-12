@@ -36,7 +36,7 @@ const DirectMessage = ({
         username={username}
       />
       <Header channelName={userId} />
-      <DirectMessageContainer teamId={teamId} userId={userId} />
+      <DirectMessageContainer teamId={currentTeam.id} userId={userId} />
       <SendMessage
         onSubmit={async (text) => {
           await mutate({
@@ -44,6 +44,23 @@ const DirectMessage = ({
               text,
               receiverId: userId,
               teamId,
+            },
+            optimisticResponse: {
+              createDirectMessage: true,
+            },
+            update: (store) => {
+              const data = store.readQuery({ query: meQuery });
+              const teamIdx = findIndex(data.me.teams, ['id', currentTeam.id]);
+              const notAlreadyThere = data.me.teams[teamIdx].directMessageMembers
+                .every(member => member.id !== parseInt(userId, 10));
+              if (notAlreadyThere) {
+                data.me.teams[teamIdx].directMessageMembers.push({
+                  __typename: 'User',
+                  id: userId,
+                  username: 'Someone',
+                });
+                store.writeQuery({ query: meQuery, data });
+              }
             },
           });
         }}
