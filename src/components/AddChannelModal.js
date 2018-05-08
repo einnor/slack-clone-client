@@ -16,8 +16,15 @@ const AddChannelModal = ({
   handleBlur,
   handleSubmit,
   isSubmitting,
+  resetForm,
 }) => (
-  <Modal open={open} onClose={onClose}>
+  <Modal
+    open={open}
+    onClose={(e) => {
+      resetForm();
+      onClose(e);
+    }}
+  >
     <Modal.Header>Add Channel</Modal.Header>
     <Modal.Content>
       <Form>
@@ -32,7 +39,15 @@ const AddChannelModal = ({
           />
         </Form.Field>
         <Form.Group widths="equal">
-          <Button fluid disabled={isSubmitting} onClick={onClose}>Cancel</Button>
+          <Button
+            fluid
+            disabled={isSubmitting}
+            onClick={(e) => {
+              resetForm();
+              onClose(e);
+            }}
+          >Cancel
+          </Button>
           <Button fluid disabled={isSubmitting} onClick={handleSubmit}>Create Channel</Button>
         </Form.Group>
       </Form>
@@ -49,6 +64,7 @@ AddChannelModal.propTypes = {
   handleBlur: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   isSubmitting: PropTypes.bool.isRequired,
+  resetForm: PropTypes.func.isRequired,
 };
 
 const createChannelMutation = gql`
