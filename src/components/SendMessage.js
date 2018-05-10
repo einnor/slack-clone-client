@@ -23,9 +23,10 @@ const SendMessage = ({
   handleBlur,
   handleSubmit,
   isSubmitting,
+  channelId,
 }) => (
   <SendMessageWrapper>
-    <FileUpload>
+    <FileUpload channelId={channelId}>
       <Button icon style={{ width: 45, height: '100%' }}>
         <Icon name="plus" />
       </Button>
@@ -53,6 +54,7 @@ SendMessage.propTypes = {
   handleBlur: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   isSubmitting: PropTypes.bool.isRequired,
+  channelId: PropTypes.number.isRequired,
 };
 
 export default withFormik({

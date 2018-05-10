@@ -58,11 +58,11 @@ class MessageContainer extends Component {
     });
 
   render() {
-    const { data: { loading, messages } } = this.props;
+    const { data: { loading, messages }, channelId } = this.props;
     if (loading) return null;
     return (
       <Messages>
-        <FileUpload disableClick>
+        <FileUpload channelId={channelId} disableClick>
           <Comment.Group>
             {messages.map(message => (
               <Comment key={`${message.id}-message`}>
