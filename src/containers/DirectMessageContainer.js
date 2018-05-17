@@ -4,8 +4,6 @@ import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import { Comment } from 'semantic-ui-react';
 
-import Messages from '../components/Messages';
-
 const newDirectMessageSubscription = gql`
   subscription($teamId: Int!, $userId: Int!) {
     newDirectMessage(teamId: $teamId, userId: $userId) {
@@ -60,7 +58,17 @@ class DirectMessageContainer extends Component {
     const { data: { loading, directMessages } } = this.props;
     if (loading) return null;
     return (
-      <Messages>
+      <div
+        style={{
+          gridColumn: 3,
+          gridRow: 2,
+          paddingLeft: 20,
+          paddingRight: 20,
+          display: 'flex',
+          flexDirection: 'column-reverse',
+          overflowY: 'auto',
+        }}
+      >
         <Comment.Group>
           {directMessages.map(message => (
             <Comment key={`${message.id}-direct-message`}>
@@ -77,7 +85,7 @@ class DirectMessageContainer extends Component {
             </Comment>
           ))}
         </Comment.Group>
-      </Messages>
+      </div>
     );
   }
 }

@@ -4,8 +4,8 @@ import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import { Comment } from 'semantic-ui-react';
 
-import Messages from '../components/Messages';
 import FileUpload from '../components/FileUpload';
+import Message from '../components/Message';
 
 const newChannelMessageSubscription = gql`
   subscription($channelId: Int!) {
@@ -15,6 +15,8 @@ const newChannelMessageSubscription = gql`
       user {
         username
       }
+      url
+      filetype
       created_at
     }
   }
@@ -61,26 +63,36 @@ class MessageContainer extends Component {
     const { data: { loading, messages }, channelId } = this.props;
     if (loading) return null;
     return (
-      <Messages>
-        <FileUpload channelId={channelId} disableClick>
-          <Comment.Group>
-            {messages.map(message => (
-              <Comment key={`${message.id}-message`}>
-                <Comment.Content>
-                  <Comment.Author as="a">{message.user.username}</Comment.Author>
-                  <Comment.Metadata>
-                    <div>{message.created_at}</div>
-                  </Comment.Metadata>
-                  <Comment.Text>{message.text}</Comment.Text>
-                  <Comment.Actions>
-                    <Comment.Action>Reply</Comment.Action>
-                  </Comment.Actions>
-                </Comment.Content>
-              </Comment>
-            ))}
-          </Comment.Group>
-        </FileUpload>
-      </Messages>
+      <FileUpload
+        style={{
+          gridColumn: 3,
+          gridRow: 2,
+          paddingLeft: 20,
+          paddingRight: 20,
+          display: 'flex',
+          flexDirection: 'column-reverse',
+          overflowY: 'auto',
+        }}
+        channelId={channelId}
+        disableClick
+      >
+        <Comment.Group>
+          {messages.map(message => (
+            <Comment key={`${message.id}-message`}>
+              <Comment.Content>
+                <Comment.Author as="a">{message.user.username}</Comment.Author>
+                <Comment.Metadata>
+                  <div>{message.created_at}</div>
+                </Comment.Metadata>
+                <Message message={message} />
+                <Comment.Actions>
+                  <Comment.Action>Reply</Comment.Action>
+                </Comment.Actions>
+              </Comment.Content>
+            </Comment>
+          ))}
+        </Comment.Group>
+      </FileUpload>
     );
   }
 }
@@ -99,6 +111,8 @@ const messagesQuery = gql`
       user {
         username
       }
+      url
+      filetype
       created_at
     }
   }

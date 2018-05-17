@@ -4,8 +4,15 @@ import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import PropTypes from 'prop-types';
 
-const FileUpload = ({ children, disableClick, channelId, mutate }) => (
+const FileUpload = ({
+  children,
+  disableClick,
+  channelId,
+  mutate,
+  style = {},
+}) => (
   <Dropzone
+    style={style}
     className="ignore"
     onDrop={async ([file]) => {
       const response = await mutate({ variables: { channelId, file } });
@@ -18,11 +25,13 @@ const FileUpload = ({ children, disableClick, channelId, mutate }) => (
 );
 
 FileUpload.propTypes = {
-	// eslint-disable-next-line
+  // eslint-disable-next-line
   children: PropTypes.array.isRequired,
   disableClick: PropTypes.bool.isRequired,
   channelId: PropTypes.number.isRequired,
   mutate: PropTypes.func.isRequired,
+  // eslint-disable-next-line
+  style: PropTypes.object,
 };
 
 const createFileMessageMutation = gql`
