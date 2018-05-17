@@ -2,9 +2,10 @@ import React from 'react';
 import { Form, Button, Modal, Input } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import Downshift from 'downshift';
-import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
 import { withRouter } from 'react-router-dom';
+
+import { getTeamMembersQuery } from '../graphql/team';
 
 const DirectMessageModal = ({
   history,
@@ -13,8 +14,8 @@ const DirectMessageModal = ({
   teamId,
   data: { loading, getTeamMembers },
 }) => (
-  <Modal open={open} onClose={onClose}>
-    <Modal.Header>Add Channel</Modal.Header>
+  <Modal open={open} onClose={onClose} style={{ margin: '100px auto 0 auto', marginTop: '100px !important' }}>
+    <Modal.Header>Direct Message</Modal.Header>
     <Modal.Content>
       <Form>
         <Form.Field>
@@ -77,14 +78,5 @@ DirectMessageModal.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   data: PropTypes.object.isRequired,
 };
-
-const getTeamMembersQuery = gql`
-  query($teamId: Int!) {
-    getTeamMembers(teamId: $teamId) {
-      id
-      username
-    }
-  }
-`;
 
 export default withRouter(graphql(getTeamMembersQuery)(DirectMessageModal));

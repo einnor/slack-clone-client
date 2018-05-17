@@ -25,7 +25,7 @@ const InvitePeopleModal = ({
       resetForm();
       onClose(e);
     }}
-    style={{ margin: '102px auto' }}
+    style={{ margin: '100px auto 0 auto', marginTop: '100px !important' }}
   >
     <Modal.Header>Add People to your Team</Modal.Header>
     <Modal.Content>
