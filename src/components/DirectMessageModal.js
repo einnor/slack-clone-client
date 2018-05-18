@@ -64,7 +64,7 @@ DirectMessageModal.propTypes = {
 };
 
 const getOrCreateDirectMessageChannelMutation = gql`
-  mutations($teamId: Int!, $members: [Int!]!) {
+  mutation($teamId: Int!, $members: [Int!]!) {
     getOrCreateDirectMessageChannel(teamId: $teamId, members: $members)
   }
 `;
