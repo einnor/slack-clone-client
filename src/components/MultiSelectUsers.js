@@ -11,6 +11,7 @@ const MultiSelectUsers = ({
   value,
   handleChange,
   placeholder,
+  currentUserId,
 }) => {
   if (loading) return null;
 
@@ -23,7 +24,9 @@ const MultiSelectUsers = ({
       selection
       value={value}
       onChange={handleChange}
-      options={getTeamMembers.map(member => ({ key: member.id, value: member.id, text: member.username }))}
+      options={getTeamMembers
+        .filter(member => member.id !== currentUserId)
+        .map(member => ({ key: member.id, value: member.id, text: member.username }))}
     />
   );
 };
@@ -34,6 +37,7 @@ MultiSelectUsers.propTypes = {
   value: PropTypes.number.isRequired,
   handleChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string.isRequired,
+  currentUserId: PropTypes.number.isRequired,
 };
 
 

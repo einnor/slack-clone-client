@@ -30,9 +30,21 @@ export default class Sidebar extends Component {
   };
 
   render() {
-    const { teams, currentTeam, username } = this.props;
+    const {
+      teams, currentTeam, username, currentUserId,
+    } = this.props;
     const { openInvitePeopleModal, openAddChannelModal, openDirectMessageModal } = this.state;
 
+    const regularChannels = [];
+    const directMessageChannels = [];
+
+    currentTeam.channels.forEach((channel) => {
+      if (channel.dm) {
+        directMessageChannels.push(channel);
+      } else {
+        regularChannels.push(channel);
+      }
+    });
     return [
       <Teams
         key="team-sidebar"
@@ -44,8 +56,8 @@ export default class Sidebar extends Component {
         teamName={currentTeam.name}
         isOwner={currentTeam.admin}
         username={username}
-        channels={currentTeam.channels}
-        users={currentTeam.directMessageMembers}
+        channels={regularChannels}
+        directMessageChannels={directMessageChannels}
         onAddChannelClick={this.toggleAddChannelModal}
         onDirectMessageClick={this.toggleDirectMessageModal}
         onInvitePeopleClick={this.toggleeInvitePeopleModal}
@@ -55,12 +67,14 @@ export default class Sidebar extends Component {
         onClose={this.toggleAddChannelModal}
         open={openAddChannelModal}
         key="sidebar-add-channel-modal"
+        currentUserId={currentUserId}
       />,
       <DirectMessageModal
         teamId={currentTeam.id}
         onClose={this.toggleDirectMessageModal}
         open={openDirectMessageModal}
         key="direct-message-modal"
+        currentUserId={currentUserId}
       />,
       <InvitePeopleModal
         teamId={currentTeam.id}
@@ -78,4 +92,5 @@ Sidebar.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   currentTeam: PropTypes.object.isRequired,
   username: PropTypes.string.isRequired,
+  currentUserId: PropTypes.number.isRequired,
 };

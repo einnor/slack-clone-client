@@ -20,6 +20,7 @@ const AddChannelModal = ({
   resetForm,
   setFieldValue,
   teamId,
+  currentUserId,
 }) => (
   <Modal
     open={open}
@@ -58,6 +59,7 @@ const AddChannelModal = ({
                 handleChange={(e, { value }) => setFieldValue('members', value)}
                 teamId={teamId}
                 placeholder="Select members to invite"
+                currentUserId={currentUserId}
               />
             </Form.Field>
           )
@@ -91,6 +93,7 @@ AddChannelModal.propTypes = {
   resetForm: PropTypes.func.isRequired,
   setFieldValue: PropTypes.func.isRequired,
   teamId: PropTypes.number.isRequired,
+  currentUserId: PropTypes.number.isRequired,
 };
 
 const createChannelMutation = gql`

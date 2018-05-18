@@ -1,68 +1,49 @@
 import React from 'react';
-import { Form, Button, Modal, Input } from 'semantic-ui-react';
+import { Form, Button, Modal } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import Downshift from 'downshift';
-import { graphql } from 'react-apollo';
+import { graphql, compose } from 'react-apollo';
+import gql from 'graphql-tag';
 import { withRouter } from 'react-router-dom';
 
-import { getTeamMembersQuery } from '../graphql/team';
+import MultiSelectUsers from './MultiSelectUsers';
+import { withFormik } from 'formik';
 
 const DirectMessageModal = ({
-  history,
   open,
   onClose,
   teamId,
-  data: { loading, getTeamMembers },
+  currentUserId,
+  values,
+  handleSubmit,
+  isSubmitting,
+  resetForm,
+  setFieldValue,
 }) => (
   <Modal open={open} onClose={onClose} style={{ margin: '100px auto 0 auto', marginTop: '100px !important' }}>
     <Modal.Header>Direct Message</Modal.Header>
     <Modal.Content>
       <Form>
         <Form.Field>
-          {!loading &&
-            (<Downshift
-              onChange={(selectedUser) => {
-                history.push(`/view-teams/users/${teamId}/${selectedUser.id}`);
-                onClose();
-              }}
-              render={({
-                getInputProps,
-                getItemProps,
-                isOpen,
-                inputValue,
-                selectedItem,
-                highlightedIndex,
-              }) => (
-                <div>
-                  <Input {...getInputProps({ placeholder: 'Search users' })} fluid name="" />
-                  {isOpen ? (
-                    <div style={{ border: '1px solid #ccc' }}>
-                      {getTeamMembers
-                        .filter(user =>
-                          !inputValue ||
-                          user.username.toLowerCase().includes(inputValue.toLowerCase()))
-                        .map((item, index) => (
-                          <div
-                            {...getItemProps({ item })}
-                            key={item.id}
-                            style={{
-                              backgroundColor:
-                                highlightedIndex === index ? 'gray' : 'white',
-                              fontWeight: selectedItem === item ? 'bold' : 'normal',
-                            }}
-                          >
-                            {item.username}
-                          </div>
-                        ))}
-                    </div>
-                  ) : null}
-                </div>
-              )}
-            />)
-          }
+          <MultiSelectUsers
+            value={values.members}
+            handleChange={(e, { value }) => setFieldValue('members', value)}
+            teamId={teamId}
+            placeholder="Select members to invite"
+            currentUserId={currentUserId}
+          />
         </Form.Field>
         <Form.Group widths="equal">
-          <Button fluid onClick={onClose}>Cancel</Button>
+          <Button
+            fluid
+            onClick={(e) => {
+              resetForm();
+              onClose(e);
+            }}
+            disabled={isSubmitting}
+          >
+            Cancel
+          </Button>
+          <Button fluid onClick={handleSubmit} disabled={isSubmitting}>Start Messaging</Button>
         </Form.Group>
       </Form>
     </Modal.Content>
@@ -70,13 +51,33 @@ const DirectMessageModal = ({
 );
 
 DirectMessageModal.propTypes = {
-  // eslint-disable-next-line
-  history: PropTypes.object.isRequired,
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   teamId: PropTypes.number.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  data: PropTypes.object.isRequired,
+  currentUserId: PropTypes.number.isRequired,
+  // eslint-disable-next-line
+  values: PropTypes.object.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  isSubmitting: PropTypes.bool.isRequired,
+  resetForm: PropTypes.func.isRequired,
+  setFieldValue: PropTypes.func.isRequired,
 };
 
-export default withRouter(graphql(getTeamMembersQuery)(DirectMessageModal));
+const getOrCreateDirectMessageChannelMutation = gql`
+  mutations($teamId: Int!, $members: [Int!]!) {
+    getOrCreateDirectMessageChannel(teamId: $teamId, members: $members)
+  }
+`;
+
+export default compose(
+  withRouter,
+  graphql(getOrCreateDirectMessageChannelMutation),
+  withFormik({
+    mapPropsToValues: () => ({ members: [] }),
+    handleSubmit: async ({ members }, { props: { onClose, teamId, mutate }, setSubmitting }) => {
+      const response = await mutate({ variables: { members, teamId } });
+      setSubmitting(false);
+      onClose();
+    },
+  }),
+)(DirectMessageModal);

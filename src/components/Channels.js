@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
+import  PropTypes from 'prop-types';
 
 const ChannelWrapper = styled.div`
   grid-column: 2;
@@ -38,20 +39,31 @@ const PushLeft = styled.div`${paddingLeft};`;
 const Green = styled.span`color: #38978d;`;
 
 const Bubble = ({ on = true }) => (on ? <Green>●</Green> : '○');
+Bubble.propTypes = {
+  on: PropTypes.bool.isRequired,
+};
 
 const channel = ({ id, name }, teamId) => <Link to={`/view-teams/${teamId}/${id}`} key={`channel-${id}`}><SideBarListItem># {name}</SideBarListItem></Link>;
+channel.propTypes = {
+  id: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+};
 
-const user = ({ id, username }, teamId) => (
-  <SideBarListItem key={`user-${id}`}>
-    <Link to={`/view-teams/users/${teamId}/${id}`}><Bubble /> {username}</Link>
+const directMessageChannel = ({ id, name }, teamId) => (
+  <SideBarListItem key={`direct-message-channel-${id}`}>
+    <Link to={`/view-teams/users/${teamId}/${id}`}><Bubble /> {name}</Link>
   </SideBarListItem>
 );
+directMessageChannel.propTypes = {
+  id: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+};
 
-export default ({
+const Channels = ({
   teamName,
   username,
   channels,
-  users,
+  directMessageChannels,
   onAddChannelClick,
   onDirectMessageClick,
   teamId,
@@ -72,7 +84,7 @@ export default ({
     <div>
       <SideBarList>
         <SideBarListHeader>Direct Messages <Icon onClick={onDirectMessageClick} name="add circle" /></SideBarListHeader>
-        {users.map(u => user(u, teamId))}
+        {directMessageChannels.map(dmc => directMessageChannel(dmc, teamId))}
       </SideBarList>
     </div>
     {isOwner && (
@@ -82,3 +94,19 @@ export default ({
     )}
   </ChannelWrapper>
 );
+
+Channels.propTypes = {
+  teamName: PropTypes.string.isRequired,
+  username: PropTypes.string.isRequired,
+  // eslint-disable-next-line
+  channels: PropTypes.array.isRequired,
+  // eslint-disable-next-line
+  directMessageChannels: PropTypes.array.isRequired,
+  onAddChannelClick: PropTypes.func.isRequired,
+  onDirectMessageClick: PropTypes.func.isRequired,
+  teamId: PropTypes.number.isRequired,
+  onInvitePeopleClick: PropTypes.func.isRequired,
+  isOwner: PropTypes.bool.isRequired,
+};
+
+export default Channels;
